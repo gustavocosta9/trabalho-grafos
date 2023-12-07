@@ -1,45 +1,20 @@
-.PHONY: all install run runmanual runwithinterface
+VENV = venv
+PYTHON = $(VENV)/bin/python3
+PIP = $(VENV)/bin/pip
 
-install: 
-	python -m venv GustavoCostaGrafos
-	GustavoCostaGrafos/Scripts/pip install --upgrade -r libraries.txt
+inputgraph = "dataset/musae_facebook_edges.csv"
+anotherarg = "dataset/musae_facebook_target.csv"
 
-run: GustavoCostaGrafos
-	echo "musae_facebook_edges.csv\musae_facebook_target.csv"
-ifeq ($(OS),Windows_NT)
-	if exist graph.png start "" graph.png
-	if exist bridges.txt start "" bridges.txt
-else
-	xdg-open graph.png
-	xdg-open bridges.txt
-endif
-	@echo "Execucao do alvo run concluida"
 
-plot_communities: GustavoCostaGrafos
-		GustavoCostaGrafos/Scripts/python communities.py
-ifeq ($(OS),Windows_NT)
-	if exist graph.png start "" graph.png
-else
-	xdg-open graph.png
-endif
+$(VENV)/bin/activate: libraries.txt
+	python3 -m venv $(VENV)
+	$(PIP) install -r libraries.txt
 
-show_bridges: GustavoCostaGrafos
-	GustavoCostaGrafos/Scripts/python bridges.py
-ifeq ($(OS),Windows_NT)
-	if exist bridges.txt start "" bridges.txt
-else
-	xdg-open bridges.txt
-endif
 
-main: GustavoCostaGrafos
-	GustavoCostaGrafos/Scripts/python main.py
-
-all: run plot_communities show_bridges main
-
-GustavoCostaGrafos:
-	python -m venv GustavoCostaGrafos
+run: $(VENV)/bin/activate
+	$(PYTHON) main.py $(inputgraph) $(anotherarg)
 
 clean:
-	rm -rf GustavoCostaGrafos/
-	rm -f graph.png
-	rm -f bridges.txt
+	rm -rf __pycache__
+	rm -rf $(VENV)
+	
