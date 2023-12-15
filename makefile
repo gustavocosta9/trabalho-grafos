@@ -12,7 +12,7 @@ $(VENV)/bin/activate: libraries.txt
 
 
 run: $(VENV)/bin/activate
-	$(PYTHON) main.py $(inputgraph) $(anotherarg)
+	$(PYTHON) src/main.py $(inputgraph) $(anotherarg)
 
 clean:
 	rm -rf __pycache__
